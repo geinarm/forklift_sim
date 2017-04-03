@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<robot>
+
+  <!-- ros_control plugin -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>forklift</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      <rosDebugLevel>Debug</rosDebugLevel>
+    </plugin>
+  </gazebo>
+
+  <!-- Body -->
+  <gazebo reference="forklift_body">
+  </gazebo>
+
+  <!-- Lift1 -->
+  <gazebo reference="forklift_lift1">
+  </gazebo>
+
+  <!-- Lift2 -->
+  <gazebo reference="forklift_lift2">
+  </gazebo>
+
+  <!-- FL Wheel -->
+  <gazebo reference="forklift_wheelFL">
+    <mu1 value="100000.0"/>
+    <mu2 value="100000.0"/>
+    <fdir1>0 1 0</fdir1>
+    <minDepth>0.01</minDepth>
+    <maxVel>1.0</maxVel>
+    <slip1 value="0"/>
+    <slip2 value="0"/>
+  </gazebo>
+
+  <!-- FR Wheel -->
+  <gazebo reference="forklift_wheelFR">
+    <mu1 value="100000.0"/>
+    <mu2 value="100000.0"/>
+    <fdir1>0 1 0</fdir1>
+    <minDepth>0.01</minDepth>
+    <maxVel>1.0</maxVel>
+    <slip1 value="0"/>
+    <slip2 value="0"/>
+  </gazebo>
+
+  <!-- BL Wheel -->
+  <!--
+  <gazebo reference="forklift_wheelBL">
+    <mu1 value="0.0"/>
+    <mu2 value="0.0"/>
+    <slip1>1.0</slip1>
+    <slip2>1.0</slip2>
+    <minDepth>0.01</minDepth>
+  </gazebo>
+  -->
+  
+  <!-- BR Wheel -->
+  <!--
+  <gazebo reference="forklift_wheelBR">
+    <mu1 value="0.0"/>
+    <mu2 value="0.0"/>
+    <slip1>1.0</slip1>
+    <slip2>1.0</slip2>
+    <minDepth>0.01</minDepth>
+  </gazebo> 
+  --> 
+
+  <!-- Caster Wheel -->
+  <gazebo reference="caster_wheel">
+    <mu1 value="0.0"/>
+    <mu2 value="0.0"/>
+    <slip1>1.0</slip1>
+    <slip2>1.0</slip2>
+  </gazebo>   
+
+</robot>

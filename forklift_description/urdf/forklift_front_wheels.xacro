@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<robot name="forklift" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- FR Wheel -->
+  <joint name="wheelFR_joint" type="continuous">
+    <parent link="forklift_body"/>
+    <child link="forklift_wheelFR"/>
+    <axis xyz="1 0 0"/>
+    <origin xyz="-0.49389 -0.90059 0.34047"/>
+  </joint>
+
+  <link name="forklift_wheelFR">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <geometry>
+       <cylinder radius="${wheelF_radius}" length="${wheelF_width}" />
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 ${PI}"/>
+      <geometry>
+       <mesh filename="package://forklift_description/meshes/forklift_wheel_front.dae"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <mass value="${wheelF_mass}"/>
+      <cylinder_inertia  m="${wheelF_mass}" r="${wheelF_radius}" h="${wheelF_width}" />
+    </inertial>
+  </link>
+
+  <!-- FL Wheel -->
+  <joint name="wheelFL_joint" type="continuous">
+    <parent link="forklift_body"/>
+    <child link="forklift_wheelFL"/>
+    <axis xyz="1 0 0"/>
+    <origin xyz="0.49389 -0.90059 0.34047"/>
+  </joint>
+
+  <link name="forklift_wheelFL">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <geometry>
+       <cylinder radius="${wheelF_radius}" length="${wheelF_width}" />
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+       <mesh filename="package://forklift_description/meshes/forklift_wheel_front.dae"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <mass value="${wheelF_mass}"/>
+      <cylinder_inertia  m="${wheelF_mass}" r="${wheelF_radius}" h="${wheelF_width}" />
+    </inertial>
+  </link>
+
+
+  <transmission name="front_right_wheel_transmission">
+    <type>hardware_interface</type>
+    <joint name="wheelFR_joint">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    </joint>    
+    <actuator name="front_wheel_motor">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="front_left_wheel_transmission">
+    <type>hardware_interface</type>
+    <joint name="wheelFL_joint">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    </joint>  
+    <actuator name="front_wheel_motor">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+</robot>

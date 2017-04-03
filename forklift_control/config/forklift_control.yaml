@@ -1,0 +1,38 @@
+forklift:
+  ## Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+  
+  ## Lift Controller ---------------------------------------
+  lift_controller:
+    type: velocity_controllers/JointVelocityController
+    joint: lift1_joint
+    pid: {p: 100.0, i: 1, d: 1.0, i_clamp: 20}
+
+  ## Diff Controller ---------------------------------------
+  front_wheel_controller:
+    type: "diff_drive_controller/DiffDriveController"
+    left_wheel: wheelFL_joint
+    right_wheel: wheelFR_joint
+    pose_covariance_diagonal: [0.001, 0.001, 1000000.0, 1000000.0, 1000000.0, 0.03]
+    twist_covariance_diagonal: [0.001, 0.001, 0.001, 1000000.0, 1000000.0, 0.03]
+    
+    wheel_separation : 0.98778
+    wheel_radius : 0.33
+
+    base_frame_id: 'forklift_body'
+    cmd_vel_timeout: 0.25
+    k_l: 0.1
+    k_r: 0.1
+
+  ## Steering Controllers ---------------------------------------    
+  #steering_left_controller:
+  #  type: velocity_controllers/JointVelocityController
+  #  joint: turn_axel_bl_joint
+  #  pid: {p: 100.0, i: 1, d: 1.0, i_clamp: 20}
+  
+  #steering_right_controller:
+  #  type: velocity_controllers/JointVelocityController
+  #  joint: turn_axel_br_joint
+  #  pid: {p: 100.0, i: 1, d: 1.0, i_clamp: 20}

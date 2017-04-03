@@ -1,0 +1,9 @@
+<launch>
+  <param name="/forklift/robot_description"
+    command="$(find xacro)/xacro --inorder '$(find forklift_description)/urdf/forklift.xacro'" />
+ 
+
+  <!-- Show in Rviz   -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find forklift_description)/launch/forklift_live.rviz"/>
+
+</launch>

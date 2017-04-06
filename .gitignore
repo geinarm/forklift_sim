@@ -11,3 +11,10 @@ bin/
 lib/
 msg_gen/
 srv_gen/
+
+
+## Python
+*.pyc
+
+## Mac stuff
+.DS_Store

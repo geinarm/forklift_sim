@@ -26,7 +26,7 @@
   <gazebo reference="forklift_wheelFL">
     <mu1 value="100000.0"/>
     <mu2 value="100000.0"/>
-    <fdir1>0 1 0</fdir1>
+    <fdir1>1 0 0</fdir1>
     <minDepth>0.01</minDepth>
     <maxVel>1.0</maxVel>
     <slip1 value="0"/>
@@ -37,7 +37,7 @@
   <gazebo reference="forklift_wheelFR">
     <mu1 value="100000.0"/>
     <mu2 value="100000.0"/>
-    <fdir1>0 1 0</fdir1>
+    <fdir1>1 0 0</fdir1>
     <minDepth>0.01</minDepth>
     <maxVel>1.0</maxVel>
     <slip1 value="0"/>

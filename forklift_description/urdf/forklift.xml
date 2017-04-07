@@ -26,7 +26,7 @@
   <gazebo reference="forklift_wheelFL">
     <mu1 value="100000.0"/>
     <mu2 value="100000.0"/>
-    <fdir1>0 1 0</fdir1>
+    <fdir1>1 0 0</fdir1>
     <minDepth>0.01</minDepth>
     <maxVel>1.0</maxVel>
     <slip1 value="0"/>
@@ -36,7 +36,7 @@
   <gazebo reference="forklift_wheelFR">
     <mu1 value="100000.0"/>
     <mu2 value="100000.0"/>
-    <fdir1>0 1 0</fdir1>
+    <fdir1>1 0 0</fdir1>
     <minDepth>0.01</minDepth>
     <maxVel>1.0</maxVel>
     <slip1 value="0"/>
@@ -70,64 +70,66 @@
     <slip2>1.0</slip2>
   </gazebo>
   <!-- Forklift -->
-  <link name="forklift_body">
+  <link name="base_link">
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 1.15"/>
+      <origin rpy="0 0 0" xyz="-1 0 1.15"/>
       <geometry>
-        <box size="1.2 2.65 1.9"/>
+        <box size="2.65 1.2 1.9"/>
       </geometry>
     </collision>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.00203 -0.06282 1.08726"/>
+      <origin rpy="0 0 1.57079632679" xyz="-0.89856 0 1.08726"/>
+      <!-- -0.00203 -0.06282 1.08726-->
       <geometry>
         <mesh filename="package://forklift_description/meshes/forklift_body.dae"/>
       </geometry>
     </visual>
     <inertial>
       <origin rpy="0 0 0" xyz="0 0 1"/>
-      <mass value="50"/>
-      <inertia ixx="33.3333333333" ixy="0.0" ixz="0.0" iyy="23.7083333333" iyz="0.0" izz="23.7083333333"/>
+      <mass value="0.1"/>
+      <!--<cube_inertia m="${body_mass}" w="1" h="1" d="1" />-->
+      <inertia ixx="0.1" ixy="0.0" ixz="0.0" iyy="10" iyz="0.0" izz="1"/>
     </inertial>
   </link>
   <joint name="lift1_joint" type="prismatic">
-    <parent link="forklift_body"/>
+    <parent link="base_link"/>
     <child link="forklift_lift1"/>
     <axis xyz="0 0 1"/>
     <limit effort="1000" lower="0" upper="3" velocity="0.5"/>
   </joint>
   <link name="forklift_lift1">
     <collision>
-      <origin rpy="0 0 0" xyz="0 -1.44 0.695"/>
+      <origin rpy="0 0 0" xyz="0.55 0 0.695"/>
       <geometry>
-        <box size="1.2 0.1 1.25"/>
+        <box size="0.1 1.2 1.25"/>
       </geometry>
     </collision>
     <collision>
-      <origin rpy="0 0 0" xyz="0.32 -2.1 0.06"/>
+      <origin rpy="0 0 0" xyz="1.2 0.32 0.06"/>
       <geometry>
-        <box size="0.13 1.2 0.03"/>
+        <box size="1.2 0.13 0.03"/>
       </geometry>
     </collision>
     <collision>
-      <origin rpy="0 0 0" xyz="-0.32 -2.1 0.06"/>
+      <origin rpy="0 0 0" xyz="1.2 -0.32 0.06"/>
       <geometry>
-        <box size="0.13 1.2 0.03"/>
+        <box size="1.2 0.13 0.03"/>
       </geometry>
     </collision>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 1.57079632679" xyz="-0.89856 0 0"/>
       <geometry>
         <mesh filename="package://forklift_description/meshes/forklift_lift1.dae"/>
       </geometry>
     </visual>
     <inertial>
-      <origin rpy="0 0 0" xyz="0 -1.4 0.6"/>
+      <origin rpy="0 0 0" xyz="0.6 0 0.6"/>
       <mass value="10"/>
-      <inertia ixx="0.908333333333" ixy="0.0" ixz="0.0" iyy="1.66666666667" iyz="0.0" izz="0.908333333333"/>
+      <inertia ixx="1.66666666667" ixy="0.0" ixz="0.0" iyy="0.908333333333" iyz="0.0" izz="0.908333333333"/>
     </inertial>
   </link>
   <joint name="lift2_joint" type="fixed">
-    <parent link="forklift_body"/>
+    <parent link="base_link"/>
     <child link="forklift_lift2"/>
     <axis xyz="0 0 1"/>
     <limit effort="1" lower="0" upper="3" velocity="1"/>
@@ -135,13 +137,13 @@
   </joint>
   <link name="forklift_lift2">
     <collision>
-      <origin rpy="0 0 0" xyz="0 -1.18 1.05"/>
+      <origin rpy="0 0 0" xyz="0.25 0 1.05"/>
       <geometry>
-        <box size="0.7 0.3 2"/>
+        <box size="0.3 0.7 2"/>
       </geometry>
     </collision>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 1.57079632679" xyz="-0.89856 0 0"/>
       <geometry>
         <mesh filename="package://forklift_description/meshes/forklift_lift2.dae"/>
       </geometry>
@@ -149,7 +151,7 @@
     <inertial>
       <origin rpy="0 0 0" xyz="0 -1.2 0.695"/>
       <mass value="10"/>
-      <inertia ixx="3.46666666667" ixy="0.0" ixz="0.0" iyy="3.74166666667" iyz="0.0" izz="0.541666666667"/>
+      <inertia ixx="3.46666666667" ixy="0.0" ixz="0.0" iyy="0.541666666667" iyz="0.0" izz="3.74166666667"/>
     </inertial>
   </link>
   <transmission name="lift_transmission">
@@ -164,52 +166,53 @@
   </transmission>
   <!-- FR Wheel -->
   <joint name="wheelFR_joint" type="continuous">
-    <parent link="forklift_body"/>
+    <parent link="base_link"/>
     <child link="forklift_wheelFR"/>
-    <axis xyz="1 0 0"/>
-    <origin xyz="-0.49389 -0.90059 0.34047"/>
+    <axis xyz="0 1 0"/>
+    <origin xyz="0 -0.49389 0.34047"/>
   </joint>
   <link name="forklift_wheelFR">
     <collision>
-      <origin rpy="0 1.57079632679 0" xyz="0 0 0"/>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <geometry>
         <cylinder length="0.01" radius="0.33"/>
       </geometry>
     </collision>
     <visual>
-      <origin rpy="0 0 3.14159265359" xyz="0 0 0"/>
+      <origin rpy="0 0 4.71238898038" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://forklift_description/meshes/forklift_wheel_front.dae"/>
       </geometry>
     </visual>
     <inertial>
-      <origin rpy="0 1.57079632679 0" xyz="0 0 0"/>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <mass value="10"/>
       <inertia ixx="0.272333333333" ixy="0" ixz="0" iyy="0.272333333333" iyz="0" izz="0.5445"/>
     </inertial>
   </link>
   <!-- FL Wheel -->
   <joint name="wheelFL_joint" type="continuous">
-    <parent link="forklift_body"/>
+    <parent link="base_link"/>
     <child link="forklift_wheelFL"/>
-    <axis xyz="1 0 0"/>
-    <origin xyz="0.49389 -0.90059 0.34047"/>
+    <axis xyz="0 1 0"/>
+    <origin xyz="0 0.49389 0.34047"/>
+    <!-- 0.49389 -0.90059 0.34047 -->
   </joint>
   <link name="forklift_wheelFL">
     <collision>
-      <origin rpy="0 1.57079632679 0" xyz="0 0 0"/>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <geometry>
         <cylinder length="0.01" radius="0.33"/>
       </geometry>
     </collision>
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 1.57079632679" xyz="0 0 0"/>
       <geometry>
         <mesh filename="package://forklift_description/meshes/forklift_wheel_front.dae"/>
       </geometry>
     </visual>
     <inertial>
-      <origin rpy="0 1.57079632679 0" xyz="0 0 0"/>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
       <mass value="10"/>
       <inertia ixx="0.272333333333" ixy="0" ixz="0" iyy="0.272333333333" iyz="0" izz="0.5445"/>
     </inertial>
@@ -234,32 +237,143 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <!-- Import back wheels -->
-  <!--<xacro:include filename="$(find forklift_description)/urdf/forklift_back_wheels.xacro" />-->
+  <!-- BR Turn Axel -->
+  <!--
+  <joint name="turn_axel_br_joint" type="revolute">
+    <origin xyz="-0.49259 0.76717 0.27997" />
+    <parent link="forklift_body"/>
+    <child link="turn_axel_BR"/>    
+    <axis xyz="0 0 1"/>
+    <limit lower="${-PI/5}" upper="${PI/4}" effort="100" velocity="1"/>
+  </joint>
+  <link name="turn_axel_BR">
+    <inertial>
+      <origin xyz="0 0 0" />
+      <mass value="1"/>
+      <cylinder_inertia  m="1" r="0.05" h="0.2" />
+    </inertial>
+  </link>
+  -->
+  <!-- BR Wheel -->
+  <joint name="wheelBR_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="forklift_wheelBR"/>
+    <axis xyz="0 1 0"/>
+    <origin xyz="-1.730949 -0.49259 0.27997"/>
+    <!-- -0.49259 0.76717 0.27997 -->
+  </joint>
+  <link name="forklift_wheelBR">
+    <!--
+    <collision>
+      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <geometry>
+       <cylinder radius="${wheelB_radius}" length="${wheelB_width}" />
+      </geometry>
+    </collision>
+    -->
+    <visual>
+      <origin rpy="0 0 4.71238898038" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://forklift_description/meshes/forklift_wheel_back.dae"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="10"/>
+      <inertia ixx="0.107791666667" ixy="0" ixz="0" iyy="0.107791666667" iyz="0" izz="0.18225"/>
+    </inertial>
+  </link>
+  <!-- BL Turn Axel -->
+  <!--
+  <joint name="turn_axel_bl_joint" type="revolute">
+    <origin xyz="0.49259 0.76717 0.27997" />
+    <parent link="forklift_body"/>
+    <child link="turn_axel_BL"/>    
+    <axis xyz="0 0 1"/>
+    <limit lower="${-PI/5}" upper="${PI/4}" effort="100" velocity="1"/>
+  </joint>
+  <link name="turn_axel_BL">
+    <inertial>
+      <origin xyz="0 0 0" />
+      <mass value="1"/>
+      <cylinder_inertia  m="1" r="0.05" h="0.2" />
+    </inertial>
+  </link>
+  -->
+  <!-- BL Wheel -->
+  <joint name="wheelBL_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="forklift_wheelBL"/>
+    <axis xyz="0 1 0"/>
+    <origin xyz="-1.730949 0.49259 0.27997"/>
+  </joint>
+  <link name="forklift_wheelBL">
+    <!--
+    <collision>
+      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <geometry>
+       <cylinder radius="${wheelB_radius}" length="${wheelB_width}" />
+      </geometry>
+    </collision>
+  -->
+    <visual>
+      <origin rpy="0 0 1.57079632679" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://forklift_description/meshes/forklift_wheel_back.dae"/>
+      </geometry>
+    </visual>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="10"/>
+      <inertia ixx="0.107791666667" ixy="0" ixz="0" iyy="0.107791666667" iyz="0" izz="0.18225"/>
+    </inertial>
+  </link>
   <!-- caster Wheel -->
   <joint name="caster_wheel_joint" type="continuous">
-    <parent link="forklift_body"/>
+    <parent link="base_link"/>
     <child link="caster_wheel"/>
-    <origin xyz="0.0 0.76717 0.27997"/>
-    <axis xyz="0 1 0"/>
+    <origin rpy="0 1.57079632679 0" xyz="-1.76717 0 0.27997"/>
+    <axis xyz="0 0 1"/>
   </joint>
   <link name="caster_wheel">
     <collision>
-      <origin rpy="0 1.57079632679 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
         <sphere radius="0.27"/>
       </geometry>
     </collision>
     <visual>
-      <origin rpy="0 1.57079632679 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <sphere radius="0.27"/>
+        <mesh filename="package://forklift_description/meshes/forklift_wheel_back.dae"/>
       </geometry>
     </visual>
     <inertial>
       <origin rpy="0 1.57079632679 0" xyz="0 0 0"/>
-      <mass value="0"/>
-      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+      <mass value="10"/>
+      <inertia ixx="0.107791666667" ixy="0" ixz="0" iyy="0.107791666667" iyz="0" izz="0.18225"/>
     </inertial>
   </link>
+  <!--
+  <transmission name="left_turn_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="turn_axel_bl_joint">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    </joint>  
+    <actuator name="turn_motor">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="right_turn_transmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="turn_axel_br_joint">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+    </joint>  
+    <actuator name="turn_motor">
+      <hardwareInterface>VelocityJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>   
+-->
 </robot>

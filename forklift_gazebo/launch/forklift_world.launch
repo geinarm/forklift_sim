@@ -22,8 +22,16 @@
     command="$(find xacro)/xacro --inorder '$(find forklift_description)/urdf/forklift.xacro'" />
 
   <!-- Run a python script to the send a service call to gazebo_ros to spawn a URDF robot -->
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+  <node name="forklift_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-urdf -model forklift -param /forklift/robot_description"/>
+
+  <node name="pallet_spawner1" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+    args="-database cargo_pallet -sdf -model pallet1 -x 5.0"/>
+  <node name="pallet_spawner2" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+    args="-database cargo_pallet -sdf -model pallet2 -y 5.0"/>
+
+  <!-- Setup static frames -->
+  <node pkg="tf" type="static_transform_publisher" name="odom_to_map" args="1 0 0 0 0 0 1 /map /odom 10" />
 
   <!-- ros_control forklift launch file -->
   <include file="$(find forklift_control)/launch/forklift_control.launch" />

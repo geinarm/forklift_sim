@@ -2,47 +2,47 @@
 <robot name="forklift" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <joint name="lift1_joint" type="prismatic">
-    <parent link="forklift_body"/>
+    <parent link="base_link"/>
     <child link="forklift_lift1"/>
     <axis xyz="0 0 1"/>
     <limit lower="0" upper="3" effort="1000" velocity="0.5"/>
   </joint>
   <link name="forklift_lift1">
     <collision>
-      <origin xyz="0 -1.44 0.695" rpy="0 0 0"/>
+      <origin xyz="0.55 0 0.695" rpy="0 0 0"/>
       <geometry>
-       <box size="1.2 0.1 1.25"/>
+       <box size="0.1 1.2 1.25"/>
       </geometry>
     </collision>
     <collision>
-      <origin xyz="0.32 -2.1 0.06" rpy="0 0 0"/>
+      <origin xyz="1.2 0.32 0.06" rpy="0 0 0"/>
       <geometry>
-       <box size="0.13 1.2 0.03"/>
+       <box size="1.2 0.13 0.03"/>
       </geometry>
     </collision>
     <collision>
-      <origin xyz="-0.32 -2.1 0.06" rpy="0 0 0"/>
+      <origin xyz="1.2 -0.32 0.06" rpy="0 0 0"/>
       <geometry>
-       <box size="0.13 1.2 0.03"/>
+       <box size="1.2 0.13 0.03"/>
       </geometry>
     </collision>    
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="-0.89856 0 0" rpy="0 0 ${PI/2}"/>
       <geometry>
        <mesh filename="package://forklift_description/meshes/forklift_lift1.dae"/>
       </geometry>
     </visual>
 
     <inertial>
-      <origin xyz="0 -1.4 0.6" rpy="0 0 0"/>
+      <origin xyz="0.6 0 0.6" rpy="0 0 0"/>
       <mass value="${lift1_mass}"/>
-      <cube_inertia m="${lift1_mass}" w="1" h="1" d="0.3" />
+      <cube_inertia m="${lift1_mass}" w="0.3" h="1" d="1" />
     </inertial>
   </link>
 
   <joint name="lift2_joint" type="fixed">
-    <parent link="forklift_body"/>
+    <parent link="base_link"/>
     <child link="forklift_lift2"/>
     <axis xyz="0 0 1"/>
     <limit lower="0" upper="3" effort="1" velocity="1"/>    
@@ -51,14 +51,14 @@
 
   <link name="forklift_lift2">
     <collision>
-      <origin xyz="0 -1.18 1.05" rpy="0 0 0"/>
+      <origin xyz="0.25 0 1.05" rpy="0 0 0"/>
       <geometry>
-       <box size="0.7 0.3 2"/>
+       <box size="0.3 0.7 2"/>
       </geometry>
     </collision>  
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="-0.89856 0 0" rpy="0 0 ${PI/2}"/>
       <geometry>
        <mesh filename="package://forklift_description/meshes/forklift_lift2.dae"/>
       </geometry>

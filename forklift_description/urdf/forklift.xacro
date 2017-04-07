@@ -4,11 +4,11 @@
 
   <!-- Constants for robot dimensions -->
   <xacro:property name="PI" value="3.1415926535897931"/>
-  <xacro:property name="body_mass" value="50" />
+  <xacro:property name="body_mass" value="1" />
   <xacro:property name="lift1_mass" value="10" />
   <xacro:property name="lift2_mass" value="10" />
   <xacro:property name="wheelF_mass" value="10" />
-  <xacro:property name="wheelB_mass" value="0.1" />
+  <xacro:property name="wheelB_mass" value="5" />
 
   <xacro:property name="wheelF_radius" value="0.33" />
   <xacro:property name="wheelF_width" value="0.01" />
@@ -31,42 +31,34 @@
 
   <xacro:macro name="cube_inertia" params="m w h d">
           <inertia
-            ixx="${m / 12.0 * (d*d + h*h)}" ixy="0.0" ixz="0.0"
-            iyy="${m / 12.0 * (w*w + h*h)}" iyz="0.0"
-            izz="${m / 12.0 * (w*w + d*d)}"/>
+            ixx="${m / 12.0 * (h*h + d*d)}" ixy="0.0" ixz="0.0"
+            iyy="${m / 12.0 * (d*d + w*w)}" iyz="0.0"
+            izz="${m / 12.0 * (h*h + w*w)}"/>
   </xacro:macro>
 
 
   <!-- Forklift -->
-  <link name="forklift_body">
+  <link name="base_link">
     <collision>
-      <origin xyz="0 0 ${height/2 + 0.2}" rpy="0 0 0"/>
+      <origin xyz="-1 0 ${height/2 + 0.2}" rpy="0 0 0"/>
       <geometry>
-	     <box size="${width} ${length} ${height}"/>
+	     <box size="${length} ${width} ${height}"/>
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="-0.00203 -0.06282 1.08726" rpy="0 0 0"/>
+      <origin xyz="-0.89856 0 1.08726" rpy="0 0 ${PI/2}"/> <!-- -0.00203 -0.06282 1.08726-->
       <geometry>
 	     <mesh filename="package://forklift_description/meshes/forklift_body.dae"/>
       </geometry>
     </visual>
 
     <inertial>
-      <origin xyz="0.3 0 1" rpy="0 0 0"/>
+      <origin xyz="0 0 1" rpy="0 0 0"/>
       <mass value="${body_mass}"/>
-      <cube_inertia m="${body_mass}" w="1.3" h="2" d="2" />
+      <cube_inertia m="${lift1_mass}" w="1" h="1" d="1" />
     </inertial>
   </link>
-
-  <!-- caster Wheel -->
-  <joint name="caster_wheel_joint" type="continuous">
-    <parent link="forklift_body"/>
-    <child link="caster_wheel"/>
-    <origin xyz="0.0 0.76717 0.27997" rpy="0 ${PI/2} 0" />
-    <axis xyz="0 0 1" />
-  </joint>
 
   <!-- Import lift unit -->
   <xacro:include filename="$(find forklift_description)/urdf/forklift_lift.xacro" />

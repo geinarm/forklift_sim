@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /RobotModel1
+        - /TF1
       Splitter Ratio: 0.55
     Tree Height: 565
   - Class: rviz/Selection
@@ -59,12 +60,22 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        forklift_body:
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        caster_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
         forklift_lift1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        forklift_lift2:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -89,24 +100,60 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        turn_axel_BL:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        turn_axel_BR:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
       Name: RobotModel
       Robot Description: robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        base_link:
+          Value: true
+        caster_wheel:
+          Value: true
+        forklift_lift1:
+          Value: true
+        forklift_lift2:
+          Value: true
+        forklift_wheelBL:
+          Value: true
+        forklift_wheelBR:
+          Value: true
+        forklift_wheelFL:
+          Value: true
+        forklift_wheelFR:
+          Value: true
+      Marker Scale: 2
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        base_link:
+          caster_wheel:
+            {}
+          forklift_lift1:
+            {}
+          forklift_lift2:
+            {}
+          forklift_wheelBL:
+            {}
+          forklift_wheelBR:
+            {}
+          forklift_wheelFL:
+            {}
+          forklift_wheelFR:
+            {}
+      Update Interval: 0
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: forklift_body
+    Fixed Frame: base_link
     Frame Rate: 30
   Name: root
   Tools:
@@ -127,22 +174,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 4.35109
+      Distance: 4.52005
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.179263
-        Y: -0.30095
-        Z: 0.580093
+        X: 0.166685
+        Y: -0.392736
+        Z: 0.856744
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.240399
+      Pitch: 0.575399
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.53812
+      Yaw: 0.909944
     Saved: ~
 Window Geometry:
   Displays:
@@ -161,4 +208,4 @@ Window Geometry:
     collapsed: true
   Width: 1446
   X: 1735
-  Y: 25
+  Y: 14

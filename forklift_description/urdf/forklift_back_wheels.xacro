@@ -21,10 +21,10 @@
 
   <!-- BR Wheel -->
   <joint name="wheelBR_joint" type="fixed">
-    <parent link="forklift_body"/>
+    <parent link="base_link"/>
     <child link="forklift_wheelBR"/>
-    <axis xyz="1 0 0"/>
-    <origin xyz="-0.49259 0.76717 0.27997" />
+    <axis xyz="0 1 0"/>
+    <origin xyz="-1.730949 -0.49259 0.27997" /> <!-- -0.49259 0.76717 0.27997 -->
   </joint>
   <link name="forklift_wheelBR">
     <!--
@@ -37,14 +37,14 @@
     -->
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 ${PI}"/>
+      <origin xyz="0 0 0" rpy="0 0 ${PI+PI/2}"/>
       <geometry>
        <mesh filename="package://forklift_description/meshes/forklift_wheel_back.dae"/>
       </geometry>
     </visual>
 
     <inertial>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <mass value="${wheelF_mass}"/>
       <cylinder_inertia  m="${wheelB_mass}" r="${wheelB_radius}" h="${wheelB_width}" />
     </inertial>
@@ -70,10 +70,10 @@
 
   <!-- BL Wheel -->
   <joint name="wheelBL_joint" type="fixed">
-    <parent link="forklift_body"/>
+    <parent link="base_link"/>
     <child link="forklift_wheelBL"/>
-    <axis xyz="1 0 0"/>
-    <origin xyz="0.49259 0.76717 0.27997" />
+    <axis xyz="0 1 0"/>
+    <origin xyz="-1.730949 0.49259 0.27997" />
   </joint>
   <link name="forklift_wheelBL">
     <!--
@@ -86,18 +86,27 @@
   -->
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 ${PI/2}"/>
       <geometry>
        <mesh filename="package://forklift_description/meshes/forklift_wheel_back.dae"/>
       </geometry>
     </visual>
 
     <inertial>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <mass value="${wheelF_mass}"/>
       <cylinder_inertia  m="${wheelB_mass}" r="${wheelB_radius}" h="${wheelB_width}" />
     </inertial>
   </link>
+
+
+  <!-- caster Wheel -->
+  <joint name="caster_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="caster_wheel"/>
+    <origin xyz="-1.76717 0 0.27997" rpy="0 ${PI/2} 0" />
+    <axis xyz="0 0 1" />
+  </joint>
 
   <link name="caster_wheel">
     <collision>

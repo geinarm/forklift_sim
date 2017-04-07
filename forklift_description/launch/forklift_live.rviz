@@ -7,6 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /RobotModel1
+        - /Marker1
       Splitter Ratio: 0.55
     Tree Height: 565
   - Class: rviz/Selection
@@ -59,7 +60,12 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        forklift_body:
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        caster_wheel:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -94,24 +100,24 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        turn_axel_BL:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        turn_axel_BR:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
       Name: RobotModel
       Robot Description: /forklift/robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /forklift/planner/marks
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: forklift_body
+    Fixed Frame: odom
     Frame Rate: 30
   Name: root
   Tools:
@@ -132,22 +138,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 5.2733
+      Distance: 17.819
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.788553
-        Y: -0.397187
-        Z: 1.15275
+        X: 2.90445
+        Y: -0.287412
+        Z: 0.834784
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.465399
+      Pitch: 0.850399
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.53312
+      Yaw: 5.25312
     Saved: ~
 Window Geometry:
   Displays:
@@ -165,5 +171,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1446
-  X: 130
-  Y: 40
+  X: 211
+  Y: 96

@@ -3,29 +3,29 @@
 
   <!-- FR Wheel -->
   <joint name="wheelFR_joint" type="continuous">
-    <parent link="forklift_body"/>
+    <parent link="base_link"/>
     <child link="forklift_wheelFR"/>
-    <axis xyz="1 0 0"/>
-    <origin xyz="-0.49389 -0.90059 0.34047"/>
+    <axis xyz="0 1 0"/>
+    <origin xyz="0 -0.49389 0.34047"/>
   </joint>
 
   <link name="forklift_wheelFR">
     <collision>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
       <geometry>
        <cylinder radius="${wheelF_radius}" length="${wheelF_width}" />
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 ${PI}"/>
+      <origin xyz="0 0 0" rpy="0 0 ${PI+PI/2}"/>
       <geometry>
        <mesh filename="package://forklift_description/meshes/forklift_wheel_front.dae"/>
       </geometry>
     </visual>
 
     <inertial>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
       <mass value="${wheelF_mass}"/>
       <cylinder_inertia  m="${wheelF_mass}" r="${wheelF_radius}" h="${wheelF_width}" />
     </inertial>
@@ -33,29 +33,29 @@
 
   <!-- FL Wheel -->
   <joint name="wheelFL_joint" type="continuous">
-    <parent link="forklift_body"/>
+    <parent link="base_link"/>
     <child link="forklift_wheelFL"/>
-    <axis xyz="1 0 0"/>
-    <origin xyz="0.49389 -0.90059 0.34047"/>
+    <axis xyz="0 1 0"/>
+    <origin xyz="0 0.49389 0.34047"/> <!-- 0.49389 -0.90059 0.34047 -->
   </joint>
 
   <link name="forklift_wheelFL">
     <collision>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
       <geometry>
        <cylinder radius="${wheelF_radius}" length="${wheelF_width}" />
       </geometry>
     </collision>
 
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="0 0 ${PI/2}"/>
       <geometry>
        <mesh filename="package://forklift_description/meshes/forklift_wheel_front.dae"/>
       </geometry>
     </visual>
 
     <inertial>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
+      <origin xyz="0 0 0" rpy="${PI/2} 0 0"/>
       <mass value="${wheelF_mass}"/>
       <cylinder_inertia  m="${wheelF_mass}" r="${wheelF_radius}" h="${wheelF_width}" />
     </inertial>

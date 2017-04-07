@@ -18,6 +18,7 @@
   <!-- The *_depend tags are used to specify dependencies -->
   <buildtool_depend>catkin</buildtool_depend>
 
+  <run_depend>gazebo_msgs</run_depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

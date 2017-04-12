@@ -30,10 +30,10 @@
   <node name="pallet_spawner2" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
     args="-database cargo_pallet -sdf -model pallet2 -y 5.0"/>
 
-  <!-- Setup static frames -->
-  <node pkg="tf" type="static_transform_publisher" name="odom_to_map" args="1 0 0 0 0 0 1 /map /odom 10" />
-
   <!-- ros_control forklift launch file -->
   <include file="$(find forklift_control)/launch/forklift_control.launch" />
+
+  <!-- Correct odometry with perfect knowledge -->
+  <node name="odom_correction" pkg="forklift_planner" type="odomCorrection.py" respawn="false" output="screen"/>  
 
 </launch>

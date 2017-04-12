@@ -1,0 +1,8 @@
+# Define the goal
+geometry_msgs/Pose[] poses  #The path to follow
+---
+# Define the result
+geometry_msgs/Pose pose #The pose we ended at
+---
+# Define a feedback message
+float32 percent_complete #How far along the path

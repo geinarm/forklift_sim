@@ -4,10 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Global Options1
-        - /Status1
-        - /RobotModel1
-        - /Marker1
+        - /Marker2
       Splitter Ratio: 0.55
     Tree Height: 565
   - Class: rviz/Selection
@@ -114,10 +111,64 @@ Visualization Manager:
         "": true
       Queue Size: 100
       Value: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        base_link:
+          Value: true
+        forklift_lift1:
+          Value: true
+        forklift_lift2:
+          Value: true
+        forklift_wheelBL:
+          Value: true
+        forklift_wheelBR:
+          Value: true
+        forklift_wheelFL:
+          Value: true
+        forklift_wheelFR:
+          Value: true
+        map:
+          Value: true
+        odom:
+          Value: true
+      Marker Scale: 3
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        map:
+          odom:
+            base_link:
+              forklift_lift1:
+                {}
+              forklift_lift2:
+                {}
+              forklift_wheelBL:
+                {}
+              forklift_wheelBR:
+                {}
+              forklift_wheelFL:
+                {}
+              forklift_wheelFR:
+                {}
+      Update Interval: 0
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /path/marker
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: odom
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
@@ -138,22 +189,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 17.819
+      Distance: 16.5731
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 2.90445
-        Y: -0.287412
-        Z: 0.834784
+        X: 1.18874
+        Y: 1.87226
+        Z: 2.30499
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.850399
+      Pitch: 0.7604
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 5.25312
+      Yaw: 1.62312
     Saved: ~
 Window Geometry:
   Displays:
@@ -171,5 +222,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1446
-  X: 211
-  Y: 96
+  X: 314
+  Y: 20

@@ -2,7 +2,7 @@ import math
 import numpy as np
 import random
 
-from WorkSpace import WorkSpace
+from workspace import WorkSpace
 from collider import *
 
 class Node:
@@ -56,7 +56,7 @@ class RRT:
 		return (dist < self.goalRadius) and (thetaErr < 0.2)
 
 
-	def findPath(self, start, goal, robot, maxNodes=1000):
+	def findPath(self, start, goal, robot, maxNodes=1000, maxSamples=1000):
 		self.nodes = []
 		self.start = start
 		self.goal = goal
@@ -67,13 +67,14 @@ class RRT:
 
 		#MyRand = [ [20, 80, 4], [70, 50, 5], [75, 30, 4] ]
 		#ri = 0
+		samples = 0
 		ng = 0
-		while len(self.nodes) < maxNodes:
+		while len(self.nodes) < maxNodes and samples < maxSamples:
 			numNodes = len(self.nodes)
 			pg = (float(numNodes)/maxNodes) * 0.3
 			useGoal = False
 			##Pick random point
-			if random.random() > (1.0-pg):
+			if random.random() > 0: # (1.0-pg):
 				ng += 1
 				print('Use goal', ng)
 				useGoal = True
@@ -85,6 +86,7 @@ class RRT:
 					values.append(val)
 				point = np.array(values)
 
+			samples += 1
 			##Find closest node
 			n = self.closestNode(point, robot)
 
@@ -94,7 +96,7 @@ class RRT:
 				trajectory = robot.steer(n.point, z, self.epsilon)
 			else:
 				z = goal
-				trajectory = robot.steer(n.point, z, 100)
+				trajectory = robot.steer(n.point, z, 10)
 
 			if trajectory == None:
 				continue
@@ -102,15 +104,15 @@ class RRT:
 
 			##Check for collision
 			if not self.ws.pointInBounds(newNode.point):
-				continue;
+				continue
 
-			robot.setState(newNode.point)
-			collider = robot.getCollider()
-			if self.ws.inCollision(collider):
-				continue
-			pathCollider = TrajectoryCollider(trajectory, 5.0)
-			if self.ws.inCollision(pathCollider):
-				continue
+			#robot.setState(newNode.point)
+			#collider = robot.getCollider()
+			#if self.ws.inCollision(collider):
+			#	continue
+			#pathCollider = TrajectoryCollider(trajectory, 1.0)
+			#if self.ws.inCollision(pathCollider):
+			#	continue
 
 			##Add new node
 			self.nodes.append(newNode)

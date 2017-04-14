@@ -2,14 +2,23 @@
 
 import rospy
 import tf
+import actionlib
+import math
+import numpy as np
 
 from std_msgs.msg import ColorRGBA
 from visualization_msgs.msg import Marker
 from gazebo_msgs.srv import GetModelState
-from geometry_msgs.msg import Vector3, Quaternion
+from geometry_msgs.msg import Vector3, Point, Quaternion, Pose
+
+from forklift_control.msg import FollowPathAction
+from forklift_control.msg import FollowPathGoal
 
 from planningDomain.domain import *
 from planner import Planner
+from motionPlanner.workspace import WorkSpace
+from motionPlanner.robot import Forklift
+from motionPlanner.RRT import RRT
 
 class WorkspacePose(object):
 	def __init__(self, x, y, theta):
@@ -18,7 +27,7 @@ class WorkspacePose(object):
 		self.theta = theta
 
 
-class Workspace(object):
+class Solver(object):
 	def __init__(self):
 		self.domain = Domain()
 		self.domain.robots.append(Robot('forklift'))
@@ -35,10 +44,42 @@ class Workspace(object):
 		rospy.init_node('workspace', anonymous=True)
 		self.pub = rospy.Publisher('/forklift/planner/marks', Marker, queue_size=10)
 
-		rate = rospy.Rate(1)
-		while not rospy.is_shutdown():
-			self.getState()
-			rate.sleep()
+		self.getState()
+
+		limits = [[-20,20], [-20, 20], [0, 2*math.pi]]
+		ws = WorkSpace(limits)
+		rrt = RRT(ws, 1.5, 1.0, limits)
+
+		robot = Forklift()
+		start = np.array([0, 0, 0])
+		goal = np.array([0, 7, math.pi])
+
+		goalNode = rrt.findPath(start, goal, robot, maxNodes=10, maxSamples=20)
+
+		if goalNode:
+			plan = goalNode.getPlan()
+
+			path = []
+			for node in plan:
+				for point in node.trajectory.points:
+					path.append(Pose(Point(point[0], point[1], 0), Quaternion(0,0,0,1)))
+
+			rospy.loginfo('Found path with %d nodes and %d points', len(plan), len(path))
+
+			client = actionlib.SimpleActionClient('follow_path_server', FollowPathAction)
+			client.wait_for_server()
+
+			actionGoal = FollowPathGoal(poses=path)
+			client.send_goal(actionGoal)
+			client.wait_for_result()
+
+		else:
+			rospy.loginfo('Failed to find a path')
+
+		#rate = rospy.Rate(1)
+		#while not rospy.is_shutdown():
+		#	self.getState()
+		#	rate.sleep()
 
 
 	def getState(self):
@@ -94,7 +135,7 @@ class Workspace(object):
 
 if __name__ == '__main__':
 	try:
-		workspace = Workspace()
-		workspace.run()
+		node = Solver()
+		node.run()
 	except rospy.ROSInterruptException:
 		pass

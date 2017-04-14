@@ -35,7 +35,7 @@ class Line(object):
 			dt = 1.0/numPoints
 			for i in xrange(numPoints+1):
 				p = self.start + (v * (i*dt))
-				points.append([p[0],p[1], theta])
+				points.append([p[0],p[1], theta%(2*math.pi)])
 
 			return points
 		else:
@@ -95,7 +95,7 @@ class Arc(object):
 
 			p = np.array([math.cos(t)*self.radius, math.sin(t)*self.radius])
 			p = p+self.center
-			points.append([p[0], p[1], theta])
+			points.append([p[0], p[1], theta%(2*math.pi)])
 
 		return points
 
@@ -112,6 +112,8 @@ class DubinsPath(object):
 		p3 = self.arc2.getPoints(ppm)
 
 		points = np.vstack((p1, p2, p3))
+		if len(points) == 0:
+			raise Exception('No trajectory found')
 		if maxLength:
 			length = self.length()
 			numPoints = int((maxLength/length) * len(points))

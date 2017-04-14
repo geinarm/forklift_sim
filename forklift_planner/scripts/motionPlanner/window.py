@@ -5,7 +5,7 @@ import math
 
 from pyglet.gl import *
 
-from WorkSpace import WorkSpace
+from workspace import WorkSpace
 from collider import *
 from RRT import RRT
 from robot import *

@@ -80,9 +80,9 @@ class Forklift(Robot):
 
 
 	def steer(self, p, q, eps):
-		calc = DubinsCalculator(5)
+		calc = DubinsCalculator(3)
 		dubins = calc.calculatePath(p, q)
-		trajectory = dubins.getTrajectory(ppm=0.5, maxLength=eps)
+		trajectory = dubins.getTrajectory(ppm=1, maxLength=eps)
 		return trajectory
 
 

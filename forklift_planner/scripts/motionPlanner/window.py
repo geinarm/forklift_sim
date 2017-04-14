@@ -1,12 +1,12 @@
 
 import numpy as np
 import pyglet
-import collider
 import math
 
 from pyglet.gl import *
 
 from WorkSpace import WorkSpace
+from collider import *
 from RRT import RRT
 from robot import *
 from graphics import *
@@ -70,16 +70,14 @@ class WorkSpaceWindow(pyglet.window.Window):
 		#Robot
 		robot_batch = pyglet.graphics.Batch()
 		self.robot.setState(self.graph.start)
-		if (type(self.robot) != PointRobot):
-			points = robot.getPoints() * self.scale
-			verts = points.flatten()
-			robot_batch.add(len(verts)/2, GL_LINE_LOOP, pyglet.graphics.Group(), ('v2f', verts ))
+		points = robot.getPoints() * self.scale
+		verts = points.flatten()
+		robot_batch.add(len(verts)/2, GL_LINE_LOOP, pyglet.graphics.Group(), ('v2f', verts ))
 
 		## Path
 		path_batch = pyglet.graphics.Batch()
 		for tj in self.pathLines:
 			tj.draw(path_batch)
-
 
 
 		start = self.graph.start
@@ -133,51 +131,19 @@ class WorkSpaceWindow(pyglet.window.Window):
 
 if __name__ == '__main__':
 
-	##Problem1
-	#start = np.array([75, 85])
-	#goal = np.array([100, 0])
-	#goalRadius = 20
-	#eps = 10
-
-	##Problem2
-	#start = np.array([20, 10])
-	#goal = np.array([75, 85])
-	#goalRadius = 10
-	#eps = 5
-
-	##Problem3
-	#start = np.array([60, 60])
-	#goal = np.array([90, 100])
-	#goalRadius = 20
-	#eps = 5
-
-	##Problem4
-	#start = np.array([60, 80])
-	#goal = np.array([60, 60])
-	#goalRadius = 5
-	#eps = 10
-
-	##Problem5
-	#start = np.array([1, 99])
-	#goal = np.array([100, 0])
-	#goalRadius = 20
-	#eps = 1
-
-	#robot = PointRobot()
-	#limits = [[0,100], [0, 100]]
-
 	##Polygon robot
 	limits = [[0,100], [0, 100], [0, 2*math.pi]]
-	robot = TriangleRobot()
-	start = np.array([91, 39, 4.7])
-	#goal = np.array([62, 55, 1.5])
-	goal = np.array([60, 10, 3.1])
+	robot = Forklift()
+	start = np.array([50, 30, 0])
+	#goal = np.array([50, 60, 4.6])
+	#goal = np.array([50, 60, 1.51])
+	#goal = np.array([50, 60, 3.14])
+	goal = np.array([49, 80, 0])
 	goalRadius = 2.0
-	eps = 15.0
+	eps = 10.0
 
 	ws = WorkSpace(limits)
-	ws.readCircleObstacles('obstacles.txt')
-	#ws.readRectangleObstacles('rect.csv')
+	ws.addObsticle(RectangleCollider([50,50], 40, 10, 0))
 
 	rrt = RRT(ws, eps, goalRadius, limits)
 	

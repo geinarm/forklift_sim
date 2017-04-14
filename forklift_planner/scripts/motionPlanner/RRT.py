@@ -1,3 +1,4 @@
+import math
 import numpy as np
 import random
 
@@ -10,6 +11,16 @@ class Node:
 		self.parent = parent
 		self.point = point
 		self.trajectory = tj
+
+	def getPlan(self):
+		plan = []
+		n = self
+		while(n.parent != None):
+			plan.append(n)
+			n = n.parent
+
+		plan.reverse()
+		return plan
 
 
 class RRT:
@@ -38,8 +49,8 @@ class RRT:
 
 
 	def inGoalRegion(self, node, robot):
-		dist = np.linalg.norm(node.point-self.goal)
-		thetaErr = abs(node.point[2]-self.goal[2])
+		dist = np.linalg.norm(node.point[0:2]-self.goal[0:2])
+		thetaErr = abs(node.point[2]-self.goal[2]) % (2*math.pi)
 		err = dist+thetaErr
 		#dist = robot.getDistance(node.point, self.goal)
 		return (dist < self.goalRadius) and (thetaErr < 0.2)
@@ -75,18 +86,18 @@ class RRT:
 				point = np.array(values)
 
 			##Find closest node
-			if useGoal:
-				n = self.closestNode(point, robot, 5)
-			else:
-				n = self.closestNode(point, robot)
+			n = self.closestNode(point, robot)
 
 			##Extend node towards sample point
-			z = robot.extend(n.point, point)
-			trajectory = robot.steer(n.point, z, self.epsilon)
+			if not useGoal:
+				z = robot.extend(n.point, point, self.epsilon)
+				trajectory = robot.steer(n.point, z, self.epsilon)
+			else:
+				z = goal
+				trajectory = robot.steer(n.point, z, 100)
+
 			if trajectory == None:
 				continue
-			if useGoal:
-				print(trajectory.end)
 			newNode = Node(trajectory.end, n, trajectory)
 
 			##Check for collision

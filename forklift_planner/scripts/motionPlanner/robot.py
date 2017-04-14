@@ -62,41 +62,28 @@ class Forklift(Robot):
 	def __init__(self):
 		points = [[5, 0], [-2.5, -2.5], [-2.5, 2.5]]
 		shape = Polygon(points)
-		super(TriangleRobot, self).__init__(shape)
+		super(Forklift, self).__init__(shape)
 
 	def setState(self, state):
 		self.position = [state[0], state[1]]
 		self.theta = state[2]
 
 
-	def extend(self, p, q, eps=None):
+	def extend(self, p, q, eps):
+		v = q[0:2]-p[0:2]
+		length = np.linalg.norm(v)
+		if length < eps:
+			v = v/length
+			z = p[0:2] + v*eps
+			return np.array([z[0], z[1], q[2]])
 		return q
 
 
 	def steer(self, p, q, eps):
 		calc = DubinsCalculator(5)
-		path = calc.calculatePath(p, q)
-
-		dt = 0.5
-		numPoints = eps/dt
-		points = np.empty((0, 3))
-		pos = p
-
-		for cmd in path.cmds:
-			P = cmd.integrate(pos, dt)
-			if (len(P) > 0):
-				pos = P[len(P)-1]
-				points = np.vstack([points, P])
-
-		points = points[0:numPoints]
-
-		if(len(points) == 0):
-			print('Problem', p, q)
-			return None
-
-		trajectory = Curve(points)
+		dubins = calc.calculatePath(p, q)
+		trajectory = dubins.getTrajectory(ppm=0.5, maxLength=eps)
 		return trajectory
-
 
 
 	def getPolarCoord(self, p1, p2):

@@ -33,14 +33,11 @@ class RRT:
 		self.dimentions = len(limits)
 
 
-	def closestNode(self, point, robot, theshold=0):
-		minDist = 99999
+	def closestNode(self, point, robot):
+		minDist = 999999
 		closest = None
 		for node in self.nodes:
-			#dist = np.linalg.norm(point-node.point)
 			dist = robot.getDistance(node.point, point)
-			if dist < theshold:
-				continue
 			if dist < minDist:
 				closest = node
 				minDist = dist
@@ -53,7 +50,7 @@ class RRT:
 		thetaErr = abs(node.point[2]-self.goal[2]) % (2*math.pi)
 		err = dist+thetaErr
 		#dist = robot.getDistance(node.point, self.goal)
-		return (dist < self.goalRadius) and (thetaErr < 0.2)
+		return (dist < self.goalRadius) and (thetaErr < 0.1)
 
 
 	def findPath(self, start, goal, robot, maxNodes=1000, maxSamples=1000):
@@ -71,10 +68,10 @@ class RRT:
 		ng = 0
 		while len(self.nodes) < maxNodes and samples < maxSamples:
 			numNodes = len(self.nodes)
-			pg = (float(numNodes)/maxNodes) * 0.3
+			pg = (float(numNodes)/maxNodes) * 0.1
 			useGoal = False
 			##Pick random point
-			if random.random() > 0: # (1.0-pg):
+			if random.random() > (1.0-pg):
 				ng += 1
 				print('Use goal', ng)
 				useGoal = True
@@ -88,31 +85,32 @@ class RRT:
 
 			samples += 1
 			##Find closest node
-			n = self.closestNode(point, robot)
+			closest = self.closestNode(point, robot)
 
 			##Extend node towards sample point
-			if not useGoal:
-				z = robot.extend(n.point, point, self.epsilon)
-				trajectory = robot.steer(n.point, z, self.epsilon)
-			else:
-				z = goal
-				trajectory = robot.steer(n.point, z, 10)
+			z = point
+			#z = robot.extend(closest.point, point, self.epsilon)
+			trajectory = robot.steer(closest.point, z, self.epsilon)
 
 			if trajectory == None:
+				print('None trajectory')
 				continue
-			newNode = Node(trajectory.end, n, trajectory)
+			newNode = Node(trajectory.end, closest, trajectory)
 
 			##Check for collision
 			if not self.ws.pointInBounds(newNode.point):
+				print(3, newNode.point)
 				continue
 
-			#robot.setState(newNode.point)
-			#collider = robot.getCollider()
-			#if self.ws.inCollision(collider):
-			#	continue
-			#pathCollider = TrajectoryCollider(trajectory, 1.0)
-			#if self.ws.inCollision(pathCollider):
-			#	continue
+			robot.setState(newNode.point)
+			collider = robot.getCollider()
+			if self.ws.inCollision(collider):
+				print(1)
+				continue
+			pathCollider = TrajectoryCollider(trajectory, 1.0)
+			if self.ws.inCollision(pathCollider):
+				print(2)
+				continue
 
 			##Add new node
 			self.nodes.append(newNode)

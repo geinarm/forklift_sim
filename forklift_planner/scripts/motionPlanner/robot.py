@@ -1,6 +1,7 @@
 
 import math
 import numpy as np
+import reeds_shepp as rp
 
 from shapely.geometry import Point, Polygon
 from shapely import affinity
@@ -60,9 +61,11 @@ class Robot(object):
 class Forklift(Robot):
 
 	def __init__(self):
-		points = [[5, 0], [-2.5, -2.5], [-2.5, 2.5]]
+		points = [[1.5, 0.2], [1.5, -0.2], [-0.5, -0.5], [-0.5, 0.5]]
 		shape = Polygon(points)
 		super(Forklift, self).__init__(shape)
+
+		self.turn_radius = 2.0;
 
 	def setState(self, state):
 		self.position = [state[0], state[1]]
@@ -80,37 +83,27 @@ class Forklift(Robot):
 
 
 	def steer(self, p, q, eps):
-		calc = DubinsCalculator(3)
-		dubins = calc.calculatePath(p, q)
-		trajectory = dubins.getTrajectory(ppm=1, maxLength=eps)
-		return trajectory
+		delta = 0.5
+		length = rp.path_length(p, q, self.turn_radius)
+		points = rp.path_sample(p, q, self.turn_radius, delta)
+		points.append(q)
+		path = np.array(points)
 
+		if length > eps:
+			num_points = math.floor(eps/delta)
+			path = path[0:num_points+1]
 
-	def getPolarCoord(self, p1, p2):
-		p = p1[0:2]
-		p0 = p2[0:2] #np.array([point[0], point[1]])
+		return Curve(path)
+		#calc = DubinsCalculator(3)
+		#dubins = calc.calculatePath(p, q)
+		#trajectory = dubins.getTrajectory(ppm=10, maxLength=eps)
+		#return trajectory
 
-		r = np.linalg.norm(p0-p)
-		rv = (p0-p)/r
+	def getDistance(self, p1, p2):
 
-		v1 = np.array([math.cos(self.theta), math.sin(self.theta)])
-		v2 = np.array([math.cos(p2[2]), math.sin(p2[2])])
+		length = rp.path_length(p1, p2, self.turn_radius)
+		return length
+		#d = np.linalg.norm(p1[0:2] - p2[0:2])
+		#thetaErr = abs(p1[2] - p2[2]) % math.pi
 
-		delta = math.acos(np.dot(v1,rv))
-		phi = math.acos(np.dot(v2, rv))
-
-		return np.array([r, delta, phi])
-
-
-	def getDistance(self, p1, p2, k_delta=1, k_phi=1):
-
-		polar = self.getPolarCoord(p1, p2)
-		#print(polar)
-
-		r = polar[0]
-		phi = polar[1]
-		delta = polar[2]
-		ds = math.atan(-k_phi*polar[1])
-
-		dist = math.sqrt(r**4 + k_phi**2 * phi**2) + k_delta * abs(delta-ds)
-		return dist
+		#return d + (4*thetaErr)

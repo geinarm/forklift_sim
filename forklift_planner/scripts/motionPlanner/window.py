@@ -49,7 +49,7 @@ class WorkSpaceWindow(pyglet.window.Window):
 		glClearColor(240,240,240,255)
 		glClear(pyglet.gl.GL_COLOR_BUFFER_BIT)
 
-		## Obstacles
+		## Obsticles
 		obstacle_batch = pyglet.graphics.Batch()
 		for obsticle in self.workspace.obstacles:
 			points = obsticle.getPoints() * self.scale
@@ -63,7 +63,7 @@ class WorkSpaceWindow(pyglet.window.Window):
 			tj.draw(line_batch)
 
 			last = len(tj.points)-1
-			verts = self.makeCircle(tj.points[last][0]*self.scale, tj.points[last][1]*self.scale, 0.5)
+			verts = self.makeCircle(tj.points[last][0]*self.scale, tj.points[last][1]*self.scale, 0.1)
 			node_batch.add(CIRCLE_POINTS, GL_POLYGON, pyglet.graphics.Group(), ('v2f', verts))
 				
 
@@ -132,23 +132,25 @@ class WorkSpaceWindow(pyglet.window.Window):
 if __name__ == '__main__':
 
 	##Polygon robot
-	limits = [[0,100], [0, 100], [0, 2*math.pi]]
+	limits = [[0,20], [0, 20], [-math.pi, math.pi]]
 	robot = Forklift()
-	start = np.array([50, 30, 0])
+	start = np.array([10, 5, 0])
 	#goal = np.array([50, 60, 4.6])
 	#goal = np.array([50, 60, 1.51])
 	#goal = np.array([50, 60, 3.14])
-	goal = np.array([49, 80, 0])
-	goalRadius = 2.0
-	eps = 10.0
+	goal = np.array([10, 15, 3.14])
+	goalRadius = 0.5
+	eps = 4.0
 
 	ws = WorkSpace(limits)
-	ws.addObsticle(RectangleCollider([50,50], 40, 10, 0))
+	ws.addObsticle(RectangleCollider([10,10], 4.0, 1.0, 0))
+	ws.addObsticle(RectangleCollider([7.5,15], 1.0, 1.5, 0))
+	ws.addObsticle(CircleCollider([15,10], 1.0))
 
 	rrt = RRT(ws, eps, goalRadius, limits)
 	
-	goalNode = rrt.findPath(start, goal, robot, maxNodes=100)
+	goalNode = rrt.findPath(start, goal, robot, maxNodes=500)
 
-	window = WorkSpaceWindow(ws, rrt, robot, width=500, height=500, scale=5)
+	window = WorkSpaceWindow(ws, rrt, robot, width=500, height=500, scale=500/20)
 
 	pyglet.app.run()

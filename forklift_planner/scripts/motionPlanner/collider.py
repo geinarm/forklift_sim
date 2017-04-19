@@ -1,7 +1,7 @@
 
 import numpy as np
-from shapely.geometry import Polygon, Point, LineString
-from shapely import affinity, geometry
+from shapely.geometry import Polygon, Point, LineString, box
+from shapely import affinity
 
 
 class ShapeCollider(object):
@@ -34,7 +34,7 @@ class RectangleCollider(ShapeCollider):
 		bottom = center[1] - height/2
 		top = center[1] + height/2
 
-		p = geometry.box(left, bottom, right, top)
+		p = box(left, bottom, right, top)
 		p = affinity.rotate(p, theta, origin='center', use_radians=True)
 		super(RectangleCollider, self).__init__(p)
 

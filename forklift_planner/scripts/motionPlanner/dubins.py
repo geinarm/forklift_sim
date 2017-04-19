@@ -29,11 +29,11 @@ class Line(object):
 	def getPoints(self, ppm=1):
 		points = []
 		v = self.end-self.start
-		numPoints = int(self.length()*ppm)
+		numPoints = int(self.length()*ppm) +1
 		if numPoints > 0:		
 			theta = math.atan2(v[1], v[0])
 			dt = 1.0/numPoints
-			for i in xrange(numPoints+1):
+			for i in xrange(numPoints):
 				p = self.start + (v * (i*dt))
 				points.append([p[0],p[1], theta%(2*math.pi)])
 
@@ -110,8 +110,10 @@ class DubinsPath(object):
 		p1 = self.arc1.getPoints(ppm)
 		p2 = self.line.getPoints(ppm)
 		p3 = self.arc2.getPoints(ppm)
+		#np.delete(p1, len(p1)-1)
+		#np.delete(p2, len(p2)-1)
 
-		points = np.vstack((p1, p2, p3))
+		points = np.vstack((p1[0:len(p1)], p2, p3))
 		if len(points) == 0:
 			raise Exception('No trajectory found')
 		if maxLength:

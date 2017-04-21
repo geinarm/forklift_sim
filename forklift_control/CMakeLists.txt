@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(forklift_control)
 
-find_package(catkin REQUIRED genmsg actionlib_msgs geometry_msgs actionlib)
-add_action_files(DIRECTORY action FILES FollowPath.action)
-generate_messages(DEPENDENCIES actionlib_msgs geometry_msgs)
+find_package(catkin REQUIRED genmsg actionlib_msgs geometry_msgs std_msgs actionlib)
+add_action_files(
+DIRECTORY action 
+FILES FollowPath.action PickupPallet.action)
+
+generate_messages(DEPENDENCIES actionlib_msgs geometry_msgs std_msgs)
 
 catkin_package()
 

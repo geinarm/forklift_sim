@@ -1,0 +1,6 @@
+# Define the goal
+std_msgs/String palletName  #The target pallet
+---
+# Define the result
+---
+# Define a feedback message

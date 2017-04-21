@@ -20,4 +20,6 @@
   <node name="joy_control" pkg="forklift_control" type="joy_control.py"/>
 -->
 
+<node name="followPathServer" pkg="forklift_control" type="followPathServer.py"/>
+
 </launch>

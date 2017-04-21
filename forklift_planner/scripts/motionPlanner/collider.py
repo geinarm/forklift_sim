@@ -17,6 +17,13 @@ class ShapeCollider(object):
 		return np.array(list(self.shape.exterior.coords))
 
 
+class PointCollider(ShapeCollider):
+	def __init__(self, point):
+
+		p = Point(point)
+		super(PointCollider, self).__init__(p)
+
+
 class CircleCollider(ShapeCollider):
 
 	def __init__(self, center, radius):

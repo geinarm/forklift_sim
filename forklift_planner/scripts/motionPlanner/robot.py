@@ -65,7 +65,7 @@ class Forklift(Robot):
 		shape = Polygon(points)
 		super(Forklift, self).__init__(shape)
 
-		self.turn_radius = 2.0;
+		self.turn_radius = 2.0
 
 	def setState(self, state):
 		self.position = [state[0], state[1]]
@@ -83,7 +83,7 @@ class Forklift(Robot):
 
 
 	def steer(self, p, q, eps):
-		delta = 0.5
+		delta = 0.2
 		length = rp.path_length(p, q, self.turn_radius)
 		points = rp.path_sample(p, q, self.turn_radius, delta)
 		points.append(q)

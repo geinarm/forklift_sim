@@ -80,6 +80,20 @@ class Domain(object):
 		self.stacks = stacks
 
 
+	def getObject(self, name):
+		objects = self.robots+self.pallets+self.stacks
+		for obj in objects:
+			if(name == obj.name):
+				return obj
+		return None
+
+	def __getitem__(self, key):
+		objects = self.robots+self.pallets+self.stacks
+		for obj in objects:
+			if(key == obj.name):
+				return obj
+		return None		
+
 	def getApplicableActions(self, state):
 		actions = []
 		for robot in self.robots:

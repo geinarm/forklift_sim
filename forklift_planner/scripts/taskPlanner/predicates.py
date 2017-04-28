@@ -21,8 +21,8 @@ class Predicate(object):
 
 
 class On(Predicate):
-	def __init__(self, pallet, loc, val=True):
-		super(On, self).__init__('On', [pallet, loc], val)
+	def __init__(self, pallet, val):
+		super(On, self).__init__('On', [pallet], val)
 
 class Holding(Predicate):
 	def __init__(self, robot, val):

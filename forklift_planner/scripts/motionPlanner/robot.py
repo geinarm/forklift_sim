@@ -61,10 +61,10 @@ class Robot(object):
 class Forklift(Robot):
 
 	def __init__(self):
-		points = [[1.5, 0.2], [1.5, -0.2], [-0.5, -0.5], [-0.5, 0.5]]
+		points = [[1.8, 0.6], [1.8, -0.6], [-2.2, -0.6], [-2.2, 0.6]]
 		shape = Polygon(points)
 		super(Forklift, self).__init__(shape)
-
+		
 		self.turn_radius = 2.0
 
 	def setState(self, state):

@@ -12,11 +12,11 @@ from std_msgs.msg import Float64
 from gazebo_msgs.srv import GetModelState, GetLinkState
 from geometry_msgs.msg import Twist, Vector3, Pose, Quaternion, Point
 
-from forklift_control.msg import PickupPalletAction
+from forklift_control.msg import PutPalletAction
 
 PUBLISH_RATE = 10 # 10hz
-NODE_NAME = 'pickup_pallet_server'
-ACTION_SERVER_NAME = 'pickup_pallet_server'
+NODE_NAME = 'put_pallet_server'
+ACTION_SERVER_NAME = 'put_pallet_server'
 WHEEL_CMD_TOPIC = '/forklift/front_wheel_controller/cmd_vel'
 FORK_CMD_TOPIC = '/forklift/lift_controller/cmd_vel'
 LIFT_CONTROL_TOPIC = '/forklift/lift_controller/command'
@@ -25,18 +25,20 @@ LIFT_LINK_NAME = 'forklift::forklift_lift1'
 MAP_FRAME = '/map'
 ROBOT_FRAME = '/base_link'
 MAX_DISTANCE = 3.0
-ALIGN_DISTANCE = 1.1
+ALIGN_DISTANCE = 1.4
+BACKUP_DISTANCE = 2.5
+BACKUP_SPEED = 0.3
 
 LENGTH = 1.66
 MAX_TURN = math.pi/4
-MAX_SPEED = 1.0
 
 CONTROL_STATE_ALIGN = 1
 CONTROL_STATE_LIFT = 2
-CONTROL_STATE_DONE = 3
+CONTROL_STATE_BACKUP = 3
+CONTROL_STATE_DONE = 4
 
 
-class PickupPalletServer:
+class PutPalletServer:
 	def __init__(self):
 		self.wheel_cmd_publisher = rospy.Publisher(WHEEL_CMD_TOPIC, Twist, queue_size=1)
 		self.lift_cmd_publisher = rospy.Publisher(LIFT_CONTROL_TOPIC, Float64, queue_size=1)
@@ -47,22 +49,20 @@ class PickupPalletServer:
 		self.modelStateService = rospy.ServiceProxy('gazebo/get_model_state', GetModelState)
 		self.linkStateService = rospy.ServiceProxy('gazebo/get_link_state', GetLinkState)
 
-		self.server = actionlib.SimpleActionServer(ACTION_SERVER_NAME, PickupPalletAction, self.execute, False)
+		self.server = actionlib.SimpleActionServer(ACTION_SERVER_NAME, PutPalletAction, self.execute, False)
 		self.server.start()
 		print('Server started')
 
 
 	def execute(self, goal):
 		rate = rospy.Rate(PUBLISH_RATE)
-		self.targetPallet = goal.palletName.data
-		self.done = False
+		self.targetPose = goal.targetPose
 		self.state = CONTROL_STATE_ALIGN
 		self.start_time = rospy.get_time()
 		self.lookupTransfrom()
 		self.findTarget()
 
-
-		while not rospy.is_shutdown() and not self.done:
+		while not rospy.is_shutdown():
 			if self.server.is_preempt_requested():
 				rospy.loginfo('Pickup Canceled')
 				self.server.set_preempted()
@@ -74,14 +74,23 @@ class PickupPalletServer:
 				self.control_alignment()
 			elif self.state == CONTROL_STATE_LIFT:
 				self.control_lift()
+			elif self.state == CONTROL_STATE_BACKUP:
+				self.control_backup()
 			elif self.state == CONTROL_STATE_DONE:
 				self.server.set_succeeded()
+				rospy.loginfo('Success')
 				break
 
 			rate.sleep()
 
 
 	def findTarget(self):
+		pos = self.targetPose.position
+		self.pallet_position = np.array([pos.x, pos.y])
+		q = self.targetPose.orientation
+		euler = tf.transformations.euler_from_quaternion([q.x, q.y, q.z, q.w])
+		self.pallet_theta = euler[2]
+
 		v_heading = np.array([math.cos(self.robot_theta), math.sin(self.robot_theta)])
 		v = np.array([math.cos(self.pallet_theta), math.sin(self.pallet_theta)])
 		if(np.dot(v, v_heading) > 0):
@@ -101,16 +110,11 @@ class PickupPalletServer:
 			self.robot_position = np.array([trans[0], trans[1]])
 			self.robot_theta = euler[2]
 
-			modelState = self.modelStateService(model_name=self.targetPallet)
-			modelPos = modelState.pose.position
-			self.pallet_position = np.array([modelPos.x, modelPos.y])
-			q = modelState.pose.orientation
-			euler = tf.transformations.euler_from_quaternion([q.x, q.y, q.z, q.w])
-			self.pallet_theta = euler[2]
 		except Exception as e:
 			rospy.logwarn('Failed to lookup transform')
 			print(e)
 			return 0
+
 
 	def control_alignment(self):
 		v_pallet = self.pallet_position-self.robot_position
@@ -161,20 +165,38 @@ class PickupPalletServer:
 		cmd.angular = Vector3(0, 0, angular)
 		self.wheel_cmd_publisher.publish(cmd)
 
+
 	def control_lift(self):
 
 		lift_link = self.linkStateService(link_name=LIFT_LINK_NAME)
 		height = lift_link.link_state.pose.position.z
 
-		if height < 0.5:
-			self.lift_cmd_publisher.publish(0.5)
+		if height > 0.05:
+			self.lift_cmd_publisher.publish(-0.5)
 		else:
 			self.lift_cmd_publisher.publish(0)
-			rospy.loginfo('Lift is up')
+			rospy.loginfo('Lift is down')
+			self.state = CONTROL_STATE_BACKUP
+
+
+	def control_backup(self):
+		v_pallet = self.pallet_position-self.robot_position
+		distance = np.linalg.norm(v_pallet)
+
+		if(distance < BACKUP_DISTANCE):
+			cmd = Twist()
+			cmd.linear = Vector3(-BACKUP_SPEED, 0, 0)
+			cmd.angular = Vector3(0, 0, 0)
+			self.wheel_cmd_publisher.publish(cmd)
+		else:
+			cmd = Twist()
+			cmd.linear = Vector3(0, 0, 0)
+			cmd.angular = Vector3(0, 0, 0)
+			self.wheel_cmd_publisher.publish(cmd)
 			self.state = CONTROL_STATE_DONE
 
 
 if __name__ == '__main__':
 	rospy.init_node(NODE_NAME)
-	server = PickupPalletServer()
+	server = PutPalletServer()
 	rospy.spin()

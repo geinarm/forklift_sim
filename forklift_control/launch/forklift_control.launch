@@ -15,11 +15,4 @@
     <remap from="joint_states" to="forklift/joint_states" />
   </node>
 
-<!--
-  <node name="joy_node" pkg="joy" type="joy_node" />
-  <node name="joy_control" pkg="forklift_control" type="joy_control.py"/>
--->
-
-<node name="followPathServer" pkg="forklift_control" type="followPathServer.py"/>
-
 </launch>

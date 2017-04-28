@@ -1,7 +1,7 @@
 
 from Queue import PriorityQueue
 
-from planningDomain.domain import *
+from domain import *
 
 class Node(object):
 	def __init__(self, state, action, parent, cost):
@@ -28,6 +28,8 @@ class Planner(object):
 		while(not frontier.empty()):
 			node = frontier.get(False)[1]
 			count += 1
+			if count % 100 == 0:
+				print(count)
 
 			if(node.state.contains(self.goal)):
 				print('Found goal', count)

@@ -4,7 +4,7 @@ project(forklift_control)
 find_package(catkin REQUIRED genmsg actionlib_msgs geometry_msgs std_msgs actionlib)
 add_action_files(
 DIRECTORY action 
-FILES FollowPath.action PickupPallet.action)
+FILES FollowPath.action PickupPallet.action PutPallet.action)
 
 generate_messages(DEPENDENCIES actionlib_msgs geometry_msgs std_msgs)
 

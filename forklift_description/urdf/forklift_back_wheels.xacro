@@ -1,24 +1,6 @@
 <?xml version="1.0"?>
 <robot name="forklift" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <!-- BR Turn Axel -->
-  <!--
-  <joint name="turn_axel_br_joint" type="revolute">
-    <origin xyz="-0.49259 0.76717 0.27997" />
-    <parent link="forklift_body"/>
-    <child link="turn_axel_BR"/>    
-    <axis xyz="0 0 1"/>
-    <limit lower="${-PI/5}" upper="${PI/4}" effort="100" velocity="1"/>
-  </joint>
-  <link name="turn_axel_BR">
-    <inertial>
-      <origin xyz="0 0 0" />
-      <mass value="1"/>
-      <cylinder_inertia  m="1" r="0.05" h="0.2" />
-    </inertial>
-  </link>
-  -->
-
   <!-- BR Wheel -->
   <joint name="wheelBR_joint" type="fixed">
     <parent link="base_link"/>
@@ -26,16 +8,8 @@
     <axis xyz="0 1 0"/>
     <origin xyz="-1.730949 -0.49259 0.27997" /> <!-- -0.49259 0.76717 0.27997 -->
   </joint>
-  <link name="forklift_wheelBR">
-    <!--
-    <collision>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
-      <geometry>
-       <cylinder radius="${wheelB_radius}" length="${wheelB_width}" />
-      </geometry>
-    </collision>
-    -->
 
+  <link name="forklift_wheelBR">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 ${PI+PI/2}"/>
       <geometry>
@@ -50,24 +24,6 @@
     </inertial>
   </link>
 
-  <!-- BL Turn Axel -->
-  <!--
-  <joint name="turn_axel_bl_joint" type="revolute">
-    <origin xyz="0.49259 0.76717 0.27997" />
-    <parent link="forklift_body"/>
-    <child link="turn_axel_BL"/>    
-    <axis xyz="0 0 1"/>
-    <limit lower="${-PI/5}" upper="${PI/4}" effort="100" velocity="1"/>
-  </joint>
-  <link name="turn_axel_BL">
-    <inertial>
-      <origin xyz="0 0 0" />
-      <mass value="1"/>
-      <cylinder_inertia  m="1" r="0.05" h="0.2" />
-    </inertial>
-  </link>
-  -->
-
   <!-- BL Wheel -->
   <joint name="wheelBL_joint" type="fixed">
     <parent link="base_link"/>
@@ -75,16 +31,8 @@
     <axis xyz="0 1 0"/>
     <origin xyz="-1.730949 0.49259 0.27997" />
   </joint>
-  <link name="forklift_wheelBL">
-    <!--
-    <collision>
-      <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
-      <geometry>
-       <cylinder radius="${wheelB_radius}" length="${wheelB_width}" />
-      </geometry>
-    </collision>
-  -->
 
+  <link name="forklift_wheelBL">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 ${PI/2}"/>
       <geometry>
@@ -116,41 +64,11 @@
       </geometry>
     </collision>
 
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-       <mesh filename="package://forklift_description/meshes/forklift_wheel_back.dae"/>
-      </geometry>
-    </visual>
-
     <inertial>
       <origin xyz="0 0 0" rpy="0 ${PI/2} 0"/>
       <mass value="${wheelF_mass}"/>
       <cylinder_inertia  m="${wheelB_mass}" r="${wheelB_radius}" h="${wheelB_width}" />
     </inertial>
   </link> 
-
-<!--
-  <transmission name="left_turn_transmission">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="turn_axel_bl_joint">
-      <hardwareInterface>VelocityJointInterface</hardwareInterface>
-    </joint>  
-    <actuator name="turn_motor">
-      <hardwareInterface>VelocityJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="right_turn_transmission">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="turn_axel_br_joint">
-      <hardwareInterface>VelocityJointInterface</hardwareInterface>
-    </joint>  
-    <actuator name="turn_motor">
-      <hardwareInterface>VelocityJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>   
--->
 
 </robot>

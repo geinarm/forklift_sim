@@ -80,6 +80,9 @@ class Domain(object):
 		self.stacks = stacks
 
 
+	def getObjects(self):
+		return self.robots+self.pallets+self.stacks
+
 	def getObject(self, name):
 		objects = self.robots+self.pallets+self.stacks
 		for obj in objects:

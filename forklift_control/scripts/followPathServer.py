@@ -7,6 +7,7 @@ import actionlib
 import numpy as np
 import tf
 
+from utils import Line
 from visualization_msgs.msg import Marker
 from std_msgs.msg import Float64, ColorRGBA
 from sensor_msgs.msg import Joy
@@ -25,36 +26,6 @@ MAX_SPEED = 1.0
 
 EPSILON = 0.1
 MAX_PATH_ERROR = 1.0
-
-class Line(object):
-	def __init__(self, p1, p2):
-		self.p1 = p1
-		self.p2 = p2
-
-		v = p2-p1
-		v = v/np.linalg.norm(v)
-		self._direction = v
-		self._normal = np.array([v[1], -v[0]])
-
-	def distance(self, point):
-		v1 = self.p2 - self.p1
-		v2 = point - self.p1
-
-		vd = v2 - (np.dot(v2, v1) / np.linalg.norm(v1)**2) * v1
-		return np.linalg.norm(vd)
-
-	def normal(self):
-		return self._normal
-
-	def heading(self):
-		v = self.p2-self.p1
-		return math.atan2(v[1], v[0])
-
-	def direction(self):
-		return self._direction
-
-	def length(self):
-		return np.linalg.norm(self.p2-self.p1)
 
 
 class FollowPathServer:
@@ -93,6 +64,7 @@ class FollowPathServer:
 
 			endDistance = self.endLine.distance(pos)
 			pathDistance = self.pathLine.distance(pos)
+			pathErr = (-np.sign(pathDot))*self.direction*pathDistance
 
 			if(pathDistance > MAX_PATH_ERROR):
 				self.server.set_aborted()
@@ -105,7 +77,7 @@ class FollowPathServer:
 				continue
 
 			delta = self.getHeadingError()
-			steering = delta*2.2 + (-np.sign(pathDot)*self.direction*pathDistance*1.8)
+			steering = delta*3.0 + pathErr*2.5
 			target_turn = max(min(steering, MAX_TURN), -MAX_TURN)
 
 			target_speed = 0.5*self.direction
@@ -164,10 +136,6 @@ class FollowPathServer:
 
 	def getHeadingError(self):
 		targetHeading = self.pathLine.heading()
-
-		#vx = self.pathLine.p2[0] - self.pose[0]
-		#vy = self.pathLine.p2[1] - self.pose[1]
-		#targetHeading = math.atan2(vy, vx)
 
 		currentHeading = self.pose[2]
 		delta = targetHeading - currentHeading

@@ -1,0 +1,12 @@
+ <launch>
+
+  <!--
+    <node name="joy_node" pkg="joy" type="joy_node" />
+    <node name="joy_control" pkg="forklift_control" type="joy_control.py"/>
+  -->
+
+  <node name="followPathServer" pkg="forklift_control" type="followPathServer.py"/>
+  <node name="pickupPalletServer" pkg="forklift_control" type="pickupPalletServer.py"/>
+  <node name="putPalletServer" pkg="forklift_control" type="putPalletServer.py"/>
+
+</launch>

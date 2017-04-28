@@ -46,24 +46,26 @@ class RRT:
 
 
 	def inGoalRegion(self, node, robot):
-		dist = np.linalg.norm(node.point[0:2]-self.goal[0:2])
-		thetaErr = abs(node.point[2]-self.goal[2]) % (2*math.pi)
-		err = dist+thetaErr
-		#dist = robot.getDistance(node.point, self.goal)
-		return (dist < self.goalRadius) and (thetaErr < 0.1)
+		for goal in self.goals:
+			dist = np.linalg.norm(node.point[0:2]-goal[0:2])
+			thetaErr = abs(node.point[2]-goal[2]) % (2*math.pi)
+			err = dist+thetaErr
+			#dist = robot.getDistance(node.point, self.goal)
+			if (dist < self.goalRadius) and (thetaErr < 0.1):
+				return True
+
+		return False
 
 
-	def findPath(self, start, goal, robot, maxNodes=1000, maxSamples=1000):
+	def findPath(self, start, goals, robot, maxNodes=1000, maxSamples=1000):
 		self.nodes = []
 		self.start = start
-		self.goal = goal
+		self.goals = goals
 		self.solution = None
 
 		self.nodes.append(Node(start, None))
 		done = False
 
-		#MyRand = [ [20, 80, 4], [70, 50, 5], [75, 30, 4] ]
-		#ri = 0
 		samples = 0
 		ng = 0
 		while len(self.nodes) < maxNodes and samples < maxSamples:
@@ -73,9 +75,8 @@ class RRT:
 			##Pick random point
 			if random.random() > (1.0-pg):
 				ng += 1
-				print('Use goal', ng)
 				useGoal = True
-				point = goal
+				point = random.choice(self.goals)
 			else:
 				values = []
 				for i in range(self.dimentions):
@@ -99,17 +100,14 @@ class RRT:
 
 			##Check for collision
 			if not self.ws.pointInBounds(newNode.point):
-				print(3, newNode.point)
 				continue
 
 			robot.setState(newNode.point)
 			collider = robot.getCollider()
 			if self.ws.inCollision(collider):
-				print(1)
 				continue
 			pathCollider = TrajectoryCollider(trajectory, 1.0)
 			if self.ws.inCollision(pathCollider):
-				print(2)
 				continue
 
 			##Add new node
@@ -117,7 +115,6 @@ class RRT:
 
 			##Check goal
 			if self.inGoalRegion(newNode, robot):
-				print('Success')
 				self.solution = newNode
 				return newNode
 

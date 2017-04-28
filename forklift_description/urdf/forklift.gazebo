@@ -44,28 +44,6 @@
     <slip2 value="0"/>
   </gazebo>
 
-  <!-- BL Wheel -->
-  <!--
-  <gazebo reference="forklift_wheelBL">
-    <mu1 value="0.0"/>
-    <mu2 value="0.0"/>
-    <slip1>1.0</slip1>
-    <slip2>1.0</slip2>
-    <minDepth>0.01</minDepth>
-  </gazebo>
-  -->
-  
-  <!-- BR Wheel -->
-  <!--
-  <gazebo reference="forklift_wheelBR">
-    <mu1 value="0.0"/>
-    <mu2 value="0.0"/>
-    <slip1>1.0</slip1>
-    <slip2>1.0</slip2>
-    <minDepth>0.01</minDepth>
-  </gazebo> 
-  --> 
-
   <!-- Caster Wheel -->
   <gazebo reference="caster_wheel">
     <mu1 value="0.0"/>

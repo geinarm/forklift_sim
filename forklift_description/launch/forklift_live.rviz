@@ -4,7 +4,7 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /Marker2
+        - /Marker1
       Splitter Ratio: 0.55
     Tree Height: 565
   - Class: rviz/Selection
@@ -105,7 +105,7 @@ Visualization Manager:
       Visual Enabled: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: /forklift/planner/marks
+      Marker Topic: /forklift/planner/marker
       Name: Marker
       Namespaces:
         "": true
@@ -117,6 +117,18 @@ Visualization Manager:
       Frames:
         All Enabled: true
         base_link:
+          Value: true
+        forklift/planner/S1:
+          Value: true
+        forklift/planner/S2:
+          Value: true
+        forklift/planner/S3:
+          Value: true
+        forklift/planner/forklift:
+          Value: true
+        forklift/planner/pallet1:
+          Value: true
+        forklift/planner/pallet2:
           Value: true
         forklift_lift1:
           Value: true
@@ -132,8 +144,6 @@ Visualization Manager:
           Value: true
         map:
           Value: true
-        odom:
-          Value: true
       Marker Scale: 3
       Name: TF
       Show Arrows: true
@@ -141,20 +151,31 @@ Visualization Manager:
       Show Names: true
       Tree:
         map:
-          odom:
-            base_link:
-              forklift_lift1:
-                {}
-              forklift_lift2:
-                {}
-              forklift_wheelBL:
-                {}
-              forklift_wheelBR:
-                {}
-              forklift_wheelFL:
-                {}
-              forklift_wheelFR:
-                {}
+          base_link:
+            forklift_lift1:
+              {}
+            forklift_lift2:
+              {}
+            forklift_wheelBL:
+              {}
+            forklift_wheelBR:
+              {}
+            forklift_wheelFL:
+              {}
+            forklift_wheelFR:
+              {}
+          forklift/planner/S1:
+            {}
+          forklift/planner/S2:
+            {}
+          forklift/planner/S3:
+            {}
+          forklift/planner/forklift:
+            {}
+          forklift/planner/pallet1:
+            {}
+          forklift/planner/pallet2:
+            {}
       Update Interval: 0
       Value: true
     - Class: rviz/Marker
@@ -189,22 +210,22 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 16.5731
+      Distance: 11.4281
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.06
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 1.18874
-        Y: 1.87226
-        Z: 2.30499
+        X: 2.5265
+        Y: 2.22927
+        Z: 0.374532
       Name: Current View
       Near Clip Distance: 0.01
-      Pitch: 0.7604
+      Pitch: 0.5704
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 1.62312
+      Yaw: 2.01812
     Saved: ~
 Window Geometry:
   Displays:
@@ -222,5 +243,5 @@ Window Geometry:
   Views:
     collapsed: true
   Width: 1446
-  X: 314
-  Y: 20
+  X: 1755
+  Y: 27

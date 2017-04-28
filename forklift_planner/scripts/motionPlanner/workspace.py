@@ -15,7 +15,8 @@ class WorkSpace:
 		self.obstacles[id] = collider
 
 	def removeObsticle(self, id):
-		del self.obstacles[id]
+		if id in self.obstacles:
+			del self.obstacles[id]
 
 
 	def pointInCollision(self, point):

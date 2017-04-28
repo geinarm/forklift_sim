@@ -2,10 +2,10 @@
 import math
 import numpy as np
 
-from planningDomain.domain import *
-from planningDomain.objects import *
-from planningDomain.actions import Take, Put, Align
-from planningDomain.planner import Planner
+from taskPlanner.domain import *
+from taskPlanner.objects import *
+from taskPlanner.actions import Take, Put, Align
+from taskPlanner.planner import Planner
 from motionPlanner.workspace import WorkSpace
 from motionPlanner.robot import Forklift
 from motionPlanner.RRT import RRT
@@ -15,7 +15,7 @@ EPS = 3.0
 GOAL_RADIUS = 0.5
 MAX_SEARCH_NODES = 500
 
-ALIGN_DISTANCE = 2.5
+ALIGN_DISTANCE = 3.0
 
 class WorkspacePose(object):
 	def __init__(self, x, y, theta):
@@ -52,26 +52,45 @@ class ForkliftPlanner(object):
 		self.currentState.set(Holding(self.domain['forklift'], None))
 		self.currentState.set(Empty(self.domain['S3']))
 
+		self.domainObjects = self.domain.getObjects()
+
 
 	def getObjectList(self):
-		return ['forklift', 'pallet1', 'pallet2']
+		return self.domainObjects
+		#return ['forklift', 'pallet1', 'pallet2']
 
-	def updateObjectState(self, name, x, y, theta):
+	def getObjectPose(self, name):
+		obj = self.domain.getObject(name)
+		return obj.pose
+
+	def updateObjectPose(self, name, x, y, theta):
 		pose = WorkspacePose(x, y, theta)
 
 		obj = self.domain.getObject(name)
 		if obj:
 			obj.pose = pose
-			if self.currentState.check(Holding(self.domain['forklift'], obj)):
-				self.workspace.removeObsticle(name)
-			elif isinstance(obj, Pallet):
-				self.workspace.setObsticle(name, RectangleCollider([x, y], 1.0, 1.5, theta))
-				print('Add pallet collider at {0},{1}'.format(x,y))
-		else:
-			raise Exception('No such object')
+
+
+	def applyAction(self, action):
+		self.currentState = action.apply(self.currentState)
+
+		print('Current State:')
+		print(self.currentState)
+
+
+	def updateWorkspace(self):
+		for obj in self.domainObjects:
+			if isinstance(obj, Pallet):
+				if self.currentState.check(Holding(self.domain['forklift'], obj)):
+					self.workspace.removeObsticle(obj.name)
+				else:
+					pose = obj.pose
+					self.workspace.setObsticle(obj.name, RectangleCollider([pose.x, pose.y], 1.0, 1.5, pose.theta))	
 
 
 	def plan(self, goal):
+		self.updateWorkspace()
+
 		planner = Planner(self.domain, self.currentState, goal)
 
 		task_actions = planner.findPlan()
@@ -91,6 +110,7 @@ class ForkliftPlanner(object):
 			else:
 				raise Exception('Unknow task action')
 
+			forklift_action.task_action = action
 			forklift_actions.append(forklift_action)
 
 		return forklift_actions
@@ -109,10 +129,15 @@ class ForkliftPlanner(object):
 
 		return [pose1, pose2]
 
-	def findPath(self, pose1, pose2):
-		start = np.array([pose1.x, pose1.y, pose1.theta])
-		goal = np.array([pose2.x, pose2.y, pose2.theta])
-		goalNode = self.rrt.findPath(start, goal, self.robot, maxNodes=MAX_SEARCH_NODES, maxSamples=MAX_SEARCH_NODES*3)
+	def findPath(self, start, goalOptions):
+		self.updateWorkspace()
+
+		start = np.array([start.x, start.y, start.theta])
+
+		goals = []
+		for goal in goalOptions:
+			goals.append(np.array([goal.x, goal.y, goal.theta]))
+		goalNode = self.rrt.findPath(start, goals, self.robot, maxNodes=MAX_SEARCH_NODES, maxSamples=MAX_SEARCH_NODES*3)
 
 		if(goalNode):
 			return goalNode.getPlan()

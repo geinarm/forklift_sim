@@ -1,0 +1,7 @@
+# Define the goal
+geometry_msgs/Pose targetPose  #Where the pallet should be
+---
+# Define the result
+geometry_msgs/Pose finalPose #Where the pallet ended up
+---
+# Define a feedback message

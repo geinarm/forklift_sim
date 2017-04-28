@@ -21,6 +21,7 @@ class Take(Action):
 		newState = state.copy()
 		newState.set(Holding(self.robot, self.pallet))
 		newState.set(Empty(self.stack))
+		newState.set(On(self.pallet, self.robot))
 		newState.remove(On(self.pallet, self.stack))
 		newState.remove(Holding(self.robot, None))
 		return newState
@@ -49,6 +50,7 @@ class Put(Action):
 		newState = state.copy()
 		newState.remove(Empty(self.stack))
 		newState.remove(Holding(self.robot, self.pallet))
+		newState.remove(On(self.pallet, self.robot))
 		newState.set(On(self.pallet, self.stack))
 		newState.set(Holding(self.robot, None))
 
@@ -58,6 +60,7 @@ class Put(Action):
 		a = True
 		a = a and state.check(Aligned(self.robot, self.stack))
 		a = a and state.check(Holding(self.robot, self.pallet))
+		a = a and state.check(On(self.pallet, self.robot))
 		a = a and state.check(Empty(self.stack))
 		return a
 

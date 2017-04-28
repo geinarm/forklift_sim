@@ -1,8 +1,9 @@
 
 class Var(object):
-	def __init__(self, name, typeName):
+	def __init__(self, name, typeName, static=False):
 		self.name = name
 		self.type = typeName
+		self.static = static
 
 	def __str__(self):
 		return self.name
@@ -23,4 +24,4 @@ class Pallet(Var):
 
 class Stack(Var):
 	def __init__(self, name):
-		super(Stack, self).__init__(name, 'Stack')
+		super(Stack, self).__init__(name, 'Stack', True)
